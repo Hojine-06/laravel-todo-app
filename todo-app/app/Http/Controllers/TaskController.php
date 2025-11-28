@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -13,13 +14,12 @@ class TaskController extends Controller
     public function index()
     {
         try {
-            // Version PROVISOIRE avec données fictives - AUCUNE erreur
-            $tasks = $this->getTasks();
-            return view('tasks.index', compact('tasks'));
+            $tasks = Task::orderBy('created_at', 'desc')->get();
+            return view('welcome', compact('tasks'));
 
         } catch (\Exception $e) {
             Log::error('Erreur lors de la récupération des tâches: ' . $e->getMessage());
-            return view('tasks.index', ['tasks' => []]);
+            return redirect()->back()->with('error', 'Erreur lors du chargement des tâches.');
         }
     }
 
@@ -37,17 +37,19 @@ class TaskController extends Controller
     public function store(Request $request)
     {
         try {
-            // Validation des données du formulaire
             $validatedData = $request->validate([
                 'title' => 'required|string|max:255',
                 'description' => 'nullable|string'
             ]);
 
-            // Simulation pour le moment - sera remplacé par le vrai modèle
-            Log::info('Tâche simulée créée: ' . $validatedData['title']);
+            Task::create([
+                'title' => $validatedData['title'],
+                'description' => $validatedData['description'] ?? null,
+                'completed' => false
+            ]);
 
             return redirect()->route('tasks.index')
-                ->with('success', 'Tâche créée avec succès! (Mode simulation)');
+                ->with('success', 'Tâche créée avec succès!');
 
         } catch (\Exception $e) {
             Log::error('Erreur lors de la création de la tâche: ' . $e->getMessage());
@@ -61,11 +63,12 @@ class TaskController extends Controller
     public function toggle($id)
     {
         try {
-            // Simulation du toggle
-            Log::info("Toggle simulé pour la tâche ID: $id");
+            $task = Task::findOrFail($id);
+            $task->completed = !$task->completed;
+            $task->save();
 
             return redirect()->route('tasks.index')
-                ->with('success', 'Statut de la tâche mis à jour! (Mode simulation)');
+                ->with('success', 'Statut de la tâche mis à jour!');
 
         } catch (\Exception $e) {
             Log::error('Erreur lors du changement de statut: ' . $e->getMessage());
@@ -79,11 +82,11 @@ class TaskController extends Controller
     public function destroy($id)
     {
         try {
-            // Simulation de suppression
-            Log::info("Suppression simulée de la tâche ID: $id");
+            $task = Task::findOrFail($id);
+            $task->delete();
 
             return redirect()->route('tasks.index')
-                ->with('success', 'Tâche supprimée avec succès! (Mode simulation)');
+                ->with('success', 'Tâche supprimée avec succès!');
 
         } catch (\Exception $e) {
             Log::error('Erreur lors de la suppression: ' . $e->getMessage());
@@ -92,15 +95,13 @@ class TaskController extends Controller
     }
 
     /**
-     * Afficher le formulaire d'édition d'une tâche (Bonus)
+     * Afficher le formulaire d'édition d'une tâche
      */
     public function edit($id)
     {
         try {
-            // Simulation - données fictives pour l'édition
-            $task = $this->getMockTask($id);
+            $task = Task::findOrFail($id);
             return view('tasks.edit', compact('task'));
-
         } catch (\Exception $e) {
             Log::error('Erreur lors de l\'édition: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Tâche non trouvée.');
@@ -108,7 +109,7 @@ class TaskController extends Controller
     }
 
     /**
-     * Mettre à jour une tâche existante (Bonus)
+     * Mettre à jour une tâche existante
      */
     public function update(Request $request, $id)
     {
@@ -118,60 +119,15 @@ class TaskController extends Controller
                 'description' => 'nullable|string'
             ]);
 
-            // Simulation de mise à jour
-            Log::info("Mise à jour simulée de la tâche ID: $id - " . $validatedData['title']);
+            $task = Task::findOrFail($id);
+            $task->update($validatedData);
 
             return redirect()->route('tasks.index')
-                ->with('success', 'Tâche mise à jour avec succès! (Mode simulation)');
+                ->with('success', 'Tâche mise à jour avec succès!');
 
         } catch (\Exception $e) {
             Log::error('Erreur lors de la mise à jour: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Erreur lors de la mise à jour de la tâche.');
         }
-    }
-
-    /**
-     * Méthode privée pour obtenir les tâches (simulation)
-     */
-    private function getTasks()
-    {
-        // Données fictives pour le développement
-        return [
-            (object)[
-                'id' => 1,
-                'title' => 'Tâche exemple 1',
-                'description' => 'Description de test - modèle Task pas encore créé',
-                'completed' => false,
-                'created_at' => now()
-            ],
-            (object)[
-                'id' => 2,
-                'title' => 'Tâche exemple 2',
-                'description' => 'Une autre tâche test - en attente du modèle',
-                'completed' => true,
-                'created_at' => now()->subHour()
-            ],
-            (object)[
-                'id' => 3,
-                'title' => 'Tâche exemple 3',
-                'description' => 'Le modèle Task sera créé par un autre membre',
-                'completed' => false,
-                'created_at' => now()->subMinutes(30)
-            ]
-        ];
-    }
-
-    /**
-     * Méthode privée pour simuler une tâche unique
-     */
-    private function getMockTask($id)
-    {
-        return (object)[
-            'id' => $id,
-            'title' => 'Tâche exemple ' . $id,
-            'description' => 'Description simulée pour l\'édition',
-            'completed' => false,
-            'created_at' => now()
-        ];
     }
 }

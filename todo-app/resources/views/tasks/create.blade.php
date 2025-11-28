@@ -5,12 +5,12 @@
     <div class="glass rounded-2xl p-8 card-3d">
         <!-- En-tête -->
         <div class="mb-8">
-            <a href="{{ route('tasks.index') }}" 
+            <a href="{{ route('tasks.index') }}"
                class="inline-flex items-center text-purple-600 hover:text-purple-700 font-medium mb-4 transition-colors">
                 <span class="mr-2">←</span>
                 <span>Retour aux tâches</span>
             </a>
-            
+
             <h2 class="text-3xl font-bold text-gray-800 mb-2">✨ Créer une nouvelle tâche</h2>
             <p class="text-gray-500">Ajoutez les détails de votre prochaine tâche</p>
         </div>
@@ -24,9 +24,9 @@
                     Titre de la tâche <span class="text-red-500">*</span>
                 </label>
                 <div class="relative">
-                    <input type="text" 
-                           id="title" 
-                           name="title" 
+                    <input type="text"
+                           id="title"
+                           name="title"
                            required
                            autofocus
                            class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-purple-100 focus:border-purple-500 transition-all outline-none text-gray-800 font-medium"
@@ -47,8 +47,8 @@
                 <label for="description" class="block text-gray-700 font-semibold mb-2">
                     Description
                 </label>
-                <textarea id="description" 
-                          name="description" 
+                <textarea id="description"
+                          name="description"
                           rows="6"
                           class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-purple-100 focus:border-purple-500 transition-all outline-none text-gray-800 resize-none"
                           placeholder="Ajoutez des détails sur cette tâche... (optionnel)">{{ old('description') }}</textarea>
@@ -62,12 +62,12 @@
 
             <!-- Boutons d'action -->
             <div class="flex items-center justify-between pt-6 border-t border-gray-200">
-                <a href="{{ route('tasks.index') }}" 
+                <a href="{{ route('tasks.index') }}"
                    class="btn-3d bg-gray-200 hover:bg-gray-300 text-gray-700 px-8 py-3 rounded-xl font-semibold transition-all">
                     Annuler
                 </a>
-                
-                <button type="submit" 
+
+                <button type="submit"
                         class="btn-3d bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-8 py-3 rounded-xl font-semibold flex items-center space-x-2">
                     <span>✨</span>
                     <span>Créer la tâche</span>

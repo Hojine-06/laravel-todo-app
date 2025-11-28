@@ -62,7 +62,7 @@
                 <h2 class="text-3xl font-bold text-gray-800">Mes Tâches</h2>
                 <p class="text-gray-500 mt-1">Gérez vos tâches efficacement</p>
             </div>
-            <a href="{{ route('tasks.create') }}" 
+            <a href="{{ route('tasks.create') }}"
                class="btn-3d bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-6 py-3 rounded-xl font-semibold flex items-center space-x-2 shadow-lg">
                 <span class="text-xl">➕</span>
                 <span>Nouvelle tâche</span>
@@ -79,7 +79,7 @@
                 </div>
                 <h3 class="text-2xl font-bold text-gray-800 mb-3">Aucune tâche pour le moment</h3>
                 <p class="text-gray-500 mb-6">Commencez par créer votre première tâche et organisez votre journée !</p>
-                <a href="{{ route('tasks.create') }}" 
+                <a href="{{ route('tasks.create') }}"
                    class="btn-3d inline-flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-8 py-3 rounded-xl font-semibold">
                     <span>✨</span>
                     <span>Créer ma première tâche</span>
@@ -99,13 +99,13 @@
                             <button type="submit" class="checkbox-3d {{ $task->completed ? 'checked' : '' }}"></button>
                         </form>
 
-                        <form action="{{ route('tasks.destroy', $task->id) }}" 
-                              method="POST" 
+                        <form action="{{ route('tasks.destroy', $task->id) }}"
+                              method="POST"
                               class="ml-auto"
                               onsubmit="return confirm('Supprimer cette tâche ?')">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" 
+                            <button type="submit"
                                     class="w-8 h-8 rounded-lg hover:bg-red-100 flex items-center justify-center transition-all group">
                                 <span class="text-gray-400 group-hover:text-red-500 transition-colors">🗑️</span>
                             </button>
@@ -117,7 +117,7 @@
                         <h3 class="text-lg font-bold text-gray-800 mb-2 {{ $task->completed ? 'line-through opacity-50' : '' }}">
                             {{ $task->title }}
                         </h3>
-                        
+
                         @if($task->description)
                             <p class="text-gray-600 text-sm leading-relaxed {{ $task->completed ? 'line-through opacity-50' : '' }}">
                                 {{ Str::limit($task->description, 100) }}
@@ -131,7 +131,7 @@
                             <span>🕐</span>
                             <span>{{ $task->created_at->diffForHumans() }}</span>
                         </div>
-                        
+
                         @if($task->completed)
                             <span class="priority-badge bg-green-100 text-green-700">
                                 ✅ Terminée
